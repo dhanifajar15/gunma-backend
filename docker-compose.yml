@@ -15,7 +15,8 @@ services:
         volumes: 
             - ./:/var/www/html/app
         working_dir: /var/www/html/app/public
-        command: php-fpm
+       # command: sh -c "composer install && yarn run dev"
+        entrypoint: /command.sh
         links:
             - db
             - cache
