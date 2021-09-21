@@ -15,7 +15,8 @@ services:
         volumes: 
             - ./:/var/www/html/app
         working_dir: /var/www/html/app/public
-        command: php-fpm
+       # command: sh -c "composer install && yarn run dev"
+        entrypoint: /command.sh
         links:
             - db
             - cache
@@ -27,7 +28,7 @@ services:
             APP_KEY: ${APP_KEY}
             APP_LOCALE: en
             APP_FALLBACK_LOCALE: en
-            DB_CONNECTION: postgres
+            DB_CONNECTION: mysql
             DB_HOST: db
             DB_DATABASE: ${DB_DATABASE}
             DB_USERNAME: ${DB_USERNAME}
@@ -38,8 +39,8 @@ services:
         ports:
             - "3306:3306"
         environment: 
-            POSTGRES_PASSWORD: ${DB_PASSWORD}
-            POSTGRES_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
+            MYSQL_USER: ${DB_USERNAME}
     cache:
         image: redis:4.0-alpine
         ports: 
