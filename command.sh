@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/sh
 composer install
-php artisan migrate
+#php artisan migrate
 php-fpm
