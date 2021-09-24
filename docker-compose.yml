@@ -41,8 +41,12 @@ services:
         environment: 
             MYSQL_DATABASE: ${DB_DATABASE}
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
-
+        volumes:
+            - mysql_data:/etc/mysql/conf.d
     cache:
         image: redis:4.0-alpine
         ports: 
             - "6379:6379"
+volumes:
+    mysql_data:
+        # external: true
