@@ -22,11 +22,11 @@ class User extends Authenticatable
         'name',
         'email',
         'password',
-        'type',
+        'isAdmin',
         'isVerified',
-        'alamat',
-        'noHp',
-        'deskripsi',
+        'address',
+        'phoneNumber',
+        'description',
     ];
 
     /**
@@ -47,6 +47,20 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
-
-
+    public function image()
+    {
+        return $this->belongsTo(Image::class);
+    }
+    public function internship()
+    {
+        return $this->hasMany(Internship::class);
+    }
+    public function notification()
+    {
+        return $this->hasMany(Internship::class);
+    }
+    public function bookmark()
+    {
+        return $this->hasMany(Tag::class);
+    }
 }

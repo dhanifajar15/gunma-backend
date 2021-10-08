@@ -14,20 +14,15 @@ class CreateUsersTable extends Migration
     public function up()
     {
         Schema::create('users', function (Blueprint $table) {
-            
             $table->id();
-            
-            $table->unsignedBigInteger('gambar_id');
-            //  $table->foreign('gambar_id')->references('id')->on('gambars');
-           
-
+            $table->foreignId('image_id')->constrained('images');
             $table->string('name');
-            $table->enum('type',['admin',['nonAdmin']]);
+            $table->boolean('isAdmin');
             $table->boolean('isVerified');
-            $table->string('email');
-            $table->string('alamat');
-            $table->integer('noHp');
-            $table->string('deskripsi');
+            $table->string('email')->unique();
+            $table->string('address');
+            $table->integer('phoneNumber');
+            $table->text('description');
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->rememberToken();

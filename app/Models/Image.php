@@ -5,15 +5,20 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Bookmark extends Model
+class Image extends Model
 {
     use HasFactory;
     protected $guarded = ['id'];
 
-    public function internship(){
-        return $this->belongsToMany(Internship::class);
-    }
+    protected $fillable = [
+        'filePath',
+    ];
+
+
     public function user(){
-        return $this->belongsTo(User::class);
+        return $this->hasOne(User::class);
+    }
+    public function internship(){
+        return $this->hasOne(Internship::class);
     }
 }

@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\internship;
+use App\Models\Internship;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
@@ -18,7 +18,7 @@ class InternshipController extends Controller
     public function index()
     {
         //
-        $internship =  internship::orderBy('id','DESC')->get();
+        $internship =  Internship::orderBy('id','DESC')->get();
 
         $response = [
             'message'=>'List data magang order by id',
@@ -47,15 +47,14 @@ class InternshipController extends Controller
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(),[
-            'namaProgram' =>['required'],
-            'status' =>['required','in:buka,tutup'],
-            'deskripsi' =>['required'],
-            'tag' =>['required'],
-            'durasi' =>['required','numeric'],
+            'programName' =>['required'],
+            'isOpen' =>['required'],
+            'description' =>['required'],
+            'duration' =>['required','numeric'],
             'benefit' =>['required'],
             'requirement' =>['required'],
-            'linkRegistrasi' =>['required'],
-            'closeRegistrasi' =>['required'],
+            'registrationLink' =>['required'],
+            'closeRegistration' =>['required'],
         ]);
 
         if($validator->fails()){
@@ -64,7 +63,7 @@ class InternshipController extends Controller
         }
 
         try {
-            $internship = internship::create($request->all());
+            $internship = Internship::create($request->all());
             $response =[
                 'message' => 'Internship created',
                 'data' => $internship
@@ -89,7 +88,7 @@ class InternshipController extends Controller
     public function show($id)
     {
         //
-        $internship = internship::findOrFail($id);
+        $internship = Internship::findOrFail($id);
 
         $response = [
             'message'=>'List data magang order by id',
@@ -119,18 +118,17 @@ class InternshipController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $internship = internship::findOrFail($id);
+        $internship = Internship::findOrFail($id);
 
         $validator = Validator::make($request->all(),[
-            'namaProgram' =>['required'],
-            'status' =>['required','in:buka,tutup'],
-            'deskripsi' =>['required'],
-            'tag' =>['required'],
-            'durasi' =>['required','numeric'],
+            'programName' =>['required'],
+            'isOpen' =>['required'],
+            'description' =>['required'],
+            'duration' =>['required','numeric'],
             'benefit' =>['required'],
             'requirement' =>['required'],
-            'linkRegistrasi' =>['required'],
-            'closeRegistrasi' =>['required'],
+            'registrationLink' =>['required'],
+            'closeRegistration' =>['required'],
         ]);
 
         if($validator->fails()){
@@ -140,6 +138,7 @@ class InternshipController extends Controller
 
         try {
             $internship ->update($request->all());
+            
             $response =[
                 'message' => 'Internship updated',
                 'data' => $internship
@@ -163,7 +162,7 @@ class InternshipController extends Controller
     public function destroy($id)
     {
         //
-        $internship = internship::findOrFail($id);
+        $internship = Internship::findOrFail($id);
         
         try {
             $internship ->delete();
