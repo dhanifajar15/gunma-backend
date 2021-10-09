@@ -16,10 +16,9 @@ services:
         volumes: 
             - ./:/var/www/html/app
         working_dir: /var/www/html/app
-        entrypoint: ./command.sh
         links:
             - db
-            - cache
+       #     - cache
         ports: 
             - "9000:9000"
         environment: 
@@ -33,7 +32,7 @@ services:
             DB_DATABASE: ${DB_DATABASE}
             DB_USERNAME: ${DB_USERNAME}
             DB_PASSWORD: ${DB_PASSWORD}
-            CACHE_DRIVER: redis
+       #     CACHE_DRIVER: redis
     db:
         image: mysql:8.0
         ports:
@@ -43,10 +42,10 @@ services:
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
         volumes:
             - mysql_data:/etc/mysql/conf.d
-    cache:
-        image: redis:4.0-alpine
-        ports: 
-            - "6379:6379"
+   # cache:
+ #       image: redis:4.0-alpine
+    #    ports: 
+ #           - "6379:6379"
 volumes:
     mysql_data:
         # external: true
