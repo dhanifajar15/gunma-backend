@@ -10,16 +10,7 @@ class Internship extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    protected $fillable = [
-        'programName',
-        'closeRegistration',
-        'duration',
-        'registrationLink',
-        'requirement',
-        'isOpen',
-        'benefit',
-        'description',
-    ];
+
 
 
     public function location(){

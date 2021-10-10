@@ -10,10 +10,7 @@ class Location extends Model
     use HasFactory;
     protected $guarded = ['id'];
 
-    protected $fillable = [
-        'locationName',
 
-    ];
 
     public function internship(){
         return $this->hasMany(Internship::class);
