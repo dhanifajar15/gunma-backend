@@ -15,7 +15,7 @@ class CreateUsersTable extends Migration
     {
         Schema::create('users', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('image_id')->constrained('images');
+            //$table->foreignId('image_id')->constrained('images');
             $table->string('name');
             $table->boolean('isAdmin');
             $table->boolean('isVerified');

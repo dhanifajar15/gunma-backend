@@ -3,6 +3,8 @@
 use App\Http\Controllers\InternshipController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\UserController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -24,3 +26,11 @@ Route::post('/v1/internship/{user_id}',[InternshipController::class,'store']);
 Route::put('/v1/internship/{user_id}',[InternshipController::class,'update']);
 Route::get('/v1/internship/{id}/{intern}',[InternshipController::class,'show']);
 Route::delete('/v1/internship/{id}',[InternshipController::class,'destroy']);
+Route::post('register-user', [UserController::class, 'register']);
+Route::post('login-user', [UserController::class, 'login']);
+
+Route::middleware('auth:sanctum')->group(function () {
+    Route::get('user', [UserController::class, 'fetch']);
+    Route::post('update-profile', [UserController::class, 'updateProfile']);
+    Route::post('logout', [UserController::class, 'logout']);
+});
