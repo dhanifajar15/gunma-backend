@@ -24,14 +24,15 @@ class UserFactory extends Factory
         return [
             'name' => $this->faker->name(),
           
-            'isAdmin' => '0',
-            'isVerified' => '1',
+            'isAdmin' => rand(0,1),
+            'isVerified' => rand(0,1),
             'email' => $this->faker->unique()->safeEmail(),
             'address' => $this->faker->address(),
             'phoneNumber' => $this->faker->randomNumber(5,true),
             'description' => $this->faker->sentence(rand(4,10)),
             'email_verified_at' => now(),
             'password' => $this->faker->password(),
+            'imageUrl' => $this->faker->url(),
             //
             //
         ];

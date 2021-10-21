@@ -58,9 +58,9 @@ class InternshipController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store( Request $request,$user_id)
+    public function store( Request $request,$userId)
     {
-        $user = User::findOrFail($user_id);
+        $user = User::findOrFail($userId);
 
 
         $validator = Validator::make($request->all(), [
@@ -74,7 +74,7 @@ class InternshipController extends Controller
             'closeRegistration' => ['required'],
             'locationName' => ['required'],
             'tagName' => ['required'],
-            // 'image_id'
+            'imageUrl' => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -92,7 +92,7 @@ class InternshipController extends Controller
             $internship->registrationLink = $request->registrationLink;
             $internship->closeRegistration = $request->closeRegistration;
             $internship->user_id = $user->id;
-            $internship->image_id = $request->image_id;
+            $internship->imageUrl = $request->imageUrl;
 
             $locationController = new locationController;
             $locationId = $locationController->getLocation($request->locationName);
@@ -122,11 +122,11 @@ class InternshipController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id, $intern)
+    public function show($internshipId)
     {
         //
-        $user = User::findOrFail($id);
-        $intern = Internship::findOrFail($intern);
+        
+        $intern = Internship::findOrFail($internshipId);
 
 
         $response = [
@@ -138,7 +138,7 @@ class InternshipController extends Controller
             'registrationLink' => $intern->registrationLink,
             'isOpen' => $intern->isOpen,
             'duration' => $intern->duration,
-            // 'image' => $intern->image->filePath,
+            'imageUrl' => $intern->imageUrl,
             'location' => $intern->location->locationName,
             'user' => $intern->user->name,
             'email' => $intern->user->email,
@@ -171,10 +171,10 @@ class InternshipController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $user_id)
+    public function update(Request $request, $internshipId)
     {
         
-        $user = User::findOrFail($user_id);
+        $internship = Internship::findOrFail($internshipId);
 
 
         $validator = Validator::make($request->all(), [
@@ -188,7 +188,7 @@ class InternshipController extends Controller
             'closeRegistration' => ['required'],
             'locationName' => ['required'],
             'tagName' => ['required'],
-            // 'image_id'
+            'imageUrl' => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -196,7 +196,7 @@ class InternshipController extends Controller
         }
 
         try {
-            $internship = new Internship;
+
             $internship->programName = $request->programName;
             $internship->isOpen = $request->isOpen;
             $internship->description = $request->description;
@@ -205,8 +205,8 @@ class InternshipController extends Controller
             $internship->benefit = $request->benefit;
             $internship->registrationLink = $request->registrationLink;
             $internship->closeRegistration = $request->closeRegistration;
-            $internship->user_id = $user->id;
-            // $internship->image_id = $request->image_id;
+            $internship->user_id = $internship->id;
+            $internship->imageUrl = $request->imageUrl;
 
             $locationController = new locationController;
             $locationId = $locationController->getLocation($request->locationName);
@@ -236,10 +236,10 @@ class InternshipController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($internshipId)
     {
         //
-        $internship = Internship::findOrFail($id);
+        $internship = Internship::findOrFail($internshipId);
 
         try {
             $internship->delete();

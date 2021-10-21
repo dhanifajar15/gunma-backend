@@ -1,7 +1,7 @@
 <?php
 namespace Database\Seeders;
 
-use App\Models\Image;
+
 use App\Models\Internship;
 use App\Models\Location;
 use App\Models\Tag;
@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        //  $this->call(UserSeeder::class);
+        // $this->call(UserSeeder::class);
         Location::factory()->count(25)->create();
         Tag::factory()->count(25)->create();
         User::factory()->count(25)->create();
