@@ -20,7 +20,7 @@ class InternshipController extends Controller
     {
         //a
         $internships = Internship::orderBy('id', 'DESC')
-            ->with(['user', 'image', 'location'])
+            ->with(['user', 'location','tag'])
             ->get();
         // foreach ($internships as $intern) {
         //     $response = [
@@ -74,7 +74,7 @@ class InternshipController extends Controller
             'closeRegistration' => ['required'],
             'locationName' => ['required'],
             'tagName' => ['required'],
-            'image_id'
+            // 'image_id'
         ]);
 
         if ($validator->fails()) {
@@ -138,7 +138,7 @@ class InternshipController extends Controller
             'registrationLink' => $intern->registrationLink,
             'isOpen' => $intern->isOpen,
             'duration' => $intern->duration,
-            'image' => $intern->image->filePath,
+            // 'image' => $intern->image->filePath,
             'location' => $intern->location->locationName,
             'user' => $intern->user->name,
             'email' => $intern->user->email,
@@ -188,7 +188,7 @@ class InternshipController extends Controller
             'closeRegistration' => ['required'],
             'locationName' => ['required'],
             'tagName' => ['required'],
-            'image_id'
+            // 'image_id'
         ]);
 
         if ($validator->fails()) {
@@ -206,7 +206,7 @@ class InternshipController extends Controller
             $internship->registrationLink = $request->registrationLink;
             $internship->closeRegistration = $request->closeRegistration;
             $internship->user_id = $user->id;
-            $internship->image_id = $request->image_id;
+            // $internship->image_id = $request->image_id;
 
             $locationController = new locationController;
             $locationId = $locationController->getLocation($request->locationName);
