@@ -16,7 +16,7 @@ class CreateInternshipsTable extends Migration
         Schema::create('internships', function (Blueprint $table) {
             $table->id();          
             $table->foreignId('location_id')->constrained('locations');
-            $table->foreignId('image_id')->constrained('images');
+           // $table->foreignId('image_id')->constrained('images');
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('tag_id')->constrained('tags');
             $table->string('programName');
