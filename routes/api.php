@@ -22,10 +22,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 });
 
 Route::get('/v1/internship',[InternshipController::class,'index']);
-Route::post('/v1/internship/{user_id}',[InternshipController::class,'store']);
-Route::put('/v1/internship/{user_id}',[InternshipController::class,'update']);
-Route::get('/v1/internship/{id}/{intern}',[InternshipController::class,'show']);
-Route::delete('/v1/internship/{id}',[InternshipController::class,'destroy']);
+Route::post('/v1/internship/{userId}',[InternshipController::class,'store']);
+Route::put('/v1/internship/{internshipId}',[InternshipController::class,'update']);
+Route::get('/v1/internship/{internshipId}',[InternshipController::class,'show']);
+Route::delete('/v1/internship/{internshipId}',[InternshipController::class,'destroy'])
+;
 Route::post('register-user', [UserController::class, 'register']);
 Route::post('login-user', [UserController::class, 'login']);
 

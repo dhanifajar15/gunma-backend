@@ -16,8 +16,7 @@ class DBSeeder extends Seeder
     public function run()
     {
         //  $this->call(UserSeeder::class);
-        Image::factory()->count(100)->create();
-        User::factory()->count(100)->create();
+
 
     }
 }

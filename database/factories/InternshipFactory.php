@@ -24,12 +24,13 @@ class InternshipFactory extends Factory
         return [
             //
             'programName' => $this->faker->name(),
-            'isOpen' => '1',
+            'isOpen' => rand(0,1),
             'description' => $this->faker->sentence(rand(4,10)),
             'duration' => rand(1,12),
             'benefit' => $this->faker->sentence(rand(1,5)),
             'requirement' => $this->faker->sentence(rand(1,5)),
-            'registrationLink' => $this->faker->sentence(1),
+            'registrationLink' => $this->faker->url(),
+            'imageUrl' => $this->faker->url(),
             'closeRegistration' => now(),
 
             'user_id' => rand(1,25),
