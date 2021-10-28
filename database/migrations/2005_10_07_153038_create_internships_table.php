@@ -19,6 +19,8 @@ class CreateInternshipsTable extends Migration
             $table->foreignId('user_id')->constrained('users');
             $table->foreignId('tag_id')->constrained('tags');
             $table->string('programName');
+            $table->string('isPaid');
+            $table->string('isWfh');
             $table->string('imageUrl')->nullable();
             $table->string('description');
             $table->string('benefit');
