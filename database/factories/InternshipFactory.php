@@ -30,6 +30,8 @@ class InternshipFactory extends Factory
             'benefit' => $this->faker->sentence(rand(1,5)),
             'requirement' => $this->faker->sentence(rand(1,5)),
             'registrationLink' => $this->faker->url(),
+            'isPaid' => $this->faker->boolean(),
+            'isWfh' => $this->faker->boolean(),
             'imageUrl' => $this->faker->url(),
             'closeRegistration' => now(),
 

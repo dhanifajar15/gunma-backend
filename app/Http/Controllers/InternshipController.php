@@ -75,6 +75,8 @@ class InternshipController extends Controller
             'locationName' => ['required'],
             'tagName' => ['required'],
             'imageUrl' => ['required'],
+            'isPaid' => ['required'],
+            'isWfh' => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -93,6 +95,9 @@ class InternshipController extends Controller
             $internship->closeRegistration = $request->closeRegistration;
             $internship->user_id = $user->id;
             $internship->imageUrl = $request->imageUrl;
+            $internship->isWfh = $request->isWfh;
+            $internship->isPaid = $request->isPaid;
+
 
             $locationController = new locationController;
             $locationId = $locationController->getLocation($request->locationName);
@@ -143,6 +148,8 @@ class InternshipController extends Controller
             'user' => $intern->user->name,
             'email' => $intern->user->email,
             'phoneNumber' => $intern->user->phoneNumber,
+            'isPaid' => $intern->isPaid,
+            'isPaid' => $intern->isWfh,
 
 
 
@@ -189,6 +196,8 @@ class InternshipController extends Controller
             'locationName' => ['required'],
             'tagName' => ['required'],
             'imageUrl' => ['required'],
+            'isPaid' => ['required'],
+            'isWfh' => ['required'],
         ]);
 
         if ($validator->fails()) {
@@ -207,6 +216,8 @@ class InternshipController extends Controller
             $internship->closeRegistration = $request->closeRegistration;
             $internship->user_id = $internship->id;
             $internship->imageUrl = $request->imageUrl;
+            $internship->isWfh = $request->isWfh;
+            $internship->isPaid = $request->isPaid;
 
             $locationController = new locationController;
             $locationId = $locationController->getLocation($request->locationName);
