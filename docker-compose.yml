@@ -5,11 +5,14 @@ services:
         command: nginx -g "daemon off;"
         links:
             - php
+            - mysql
         ports: 
             - "80:80"
             - "443:443"
         volumes: 
             - ./public:/var/www/html/app/public
+        networks:
+            - gunma-net
             
     php:
         build: docker/images/php
@@ -31,6 +34,8 @@ services:
             DB_DATABASE: ${DB_DATABASE}
             DB_USERNAME: ${DB_USERNAME}
             DB_PASSWORD: ${DB_PASSWORD}
+        networks:
+            - gunma-net
 
     mysql:
         image: mysql:8.0
@@ -41,6 +46,8 @@ services:
             MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
         volumes:
             - mysql_data:/etc/mysql/conf.d
+        networks:
+            - gunma-net
 
     phpmyadmin:
         image: phpmyadmin:latest
@@ -52,7 +59,13 @@ services:
             PMA_HOST: mysql
             PMA_PASSWORD: ${DB_PASSWORD}
         restart: unless-stopped
+        networks:
+            - gunma-net
 
 volumes:
     mysql_data:
+        external: true
+
+networks:
+   gunma-net:
         external: true

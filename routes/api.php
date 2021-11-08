@@ -25,10 +25,11 @@ Route::get('/v1/internship',[InternshipController::class,'index']);
 Route::post('/v1/internship/{userId}',[InternshipController::class,'store']);
 Route::put('/v1/internship/{internshipId}',[InternshipController::class,'update']);
 Route::get('/v1/internship/{internshipId}',[InternshipController::class,'show']);
-Route::delete('/v1/internship/{internshipId}',[InternshipController::class,'destroy'])
-;
-Route::post('register-user', [UserController::class, 'register']);
-Route::post('login-user', [UserController::class, 'login']);
+Route::delete('/v1/internship/{internshipId}',[InternshipController::class,'destroy']);
+
+Route::post('/v1/register-user', 'UserController@register');
+// Route::get('/v1/register-user', [UserController::class, 'register']);
+Route::post('v1/login-user', [UserController::class, 'login']);
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('user', [UserController::class, 'fetch']);
