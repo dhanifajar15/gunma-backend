@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Helpers\ResponseFormatter;
 use Response;
 use Auth;
+use Exception;
 
 class UserController extends Controller
 {
@@ -16,27 +17,27 @@ class UserController extends Controller
     {
         try {
             $request->validate([
-                'name' => ['required', 'string', 'max:255'],
-                'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-                'password' => ['required', 'string', 'min:8', 'confirmed'],
-                'isAdmin' => ['required'],
-                'isVerified' => ['required'],
-                'address' => ['required', 'string', 'max:255'],
-                'phoneNumber' => ['required', 'int'],
-                'description' => ['required', 'string', 'max:255'],
-                'email_verified_at' => ['required', 'date'] 
+                'name'              => ['required', 'string', 'max:255'],
+                'email'             => ['required', 'string', 'email', 'max:255', 'unique:users'],
+                'password'          => ['required', 'string', 'min:8', 'confirmed'],
+                'isAdmin'           => ['nullable'],
+                'isVerified'        => ['nullable'],
+                'address'           => ['nullable'],
+                'phoneNumber'       => ['nullable'],
+                'description'       => ['nullable'],
+                'email_verified_at' => ['date'],
             ]);
 
-                User::create([
-                'name' => $request -> name,
-                'email' => $request -> email,
+            User::create([
+                'name' => $request->name,
+                'email' => $request->email,
                 'password' => Hash::make($request -> password),
-                'isAdmin' => $request -> isAdmin,
-                'isVerified' => $request -> isVerified,
-                'address' => $request -> address,
-                'phoneNumber' => $request -> phoneNumber,
-                'description' => $request -> description,
-                'email_verified_at' => $request -> email_verified_at
+                'isAdmin' => $request->isAdmin,
+                'isVerified' => $request->isVerified,
+                'address' => $request->address,
+                'phoneNumber' => $request->phoneNumber,
+                'description' => $request->description,
+                'email_verified_at' => $request->email_verified_at
             ]);
 
             $user = User::where('email', $request->email)->first();
@@ -73,7 +74,7 @@ class UserController extends Controller
                 ], 'Authentication Failed');    
             }         
                 
-            $user = User::where('email', $request ->email)->first(); 
+            $user = User::where('email', $request->email)->first(); 
             
             if (!Hash::check($request->password, $user->password, [])) {
                 throw new \Exception('Invalid Credentials');
@@ -115,5 +116,23 @@ class UserController extends Controller
         $token = $request->user()->currentAccessToken()->delete();
 
         return ResponseFormatter::success($token, 'Token berhasil dicabut');
+    }
+
+    public function detailProfile(Request $request)
+    {
+        $data = $request -> user();
+        $user = Auth::user();
+        
+        return ResponseFormatter::success($user, 'Detail Profile');
+    }
+
+    public function delete(Request $request)
+    {
+        $data = $request ->all();
+
+        $user = Auth::user();
+        $user -> delete ($data);
+
+        return ResponseFormatter::success($user, 'Profile berhasil dihapus');
     }
 }
