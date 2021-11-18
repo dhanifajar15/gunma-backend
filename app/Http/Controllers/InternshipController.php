@@ -148,7 +148,7 @@ class InternshipController extends Controller
      */
     public function show($internship_id)
     {
-       
+
 
 
 
