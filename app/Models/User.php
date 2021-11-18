@@ -9,6 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Laravel\Sanctum\HasApiTokens;
 
+
 class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
@@ -18,16 +19,8 @@ class User extends Authenticatable
      *
      * @var string[]
      */
-    protected $fillable = [
-        'name',
-        'email',
-        'password',
-        'type',
-        'isVerified',
-        'alamat',
-        'noHp',
-        'deskripsi',
-    ];
+    protected $guarded = ['id'];
+
 
     /**
      * The attributes that should be hidden for serialization.
@@ -48,5 +41,16 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-
+    public function internship()
+    {
+        return $this->hasMany(Internship::class);
+    }
+    public function notification()
+    {
+        return $this->hasMany(Internship::class);
+    }
+    public function bookmark()
+    {
+        return $this->hasMany(Tag::class);
+    }
 }

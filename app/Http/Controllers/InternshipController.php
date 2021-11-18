@@ -2,30 +2,40 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\internship;
+use App\Models\Internship;
+use App\Models\Location;
+use App\Models\Tag;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class InternshipController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->authorizeResource(Internship::class,'internship');
+    // }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
-        $internship =  internship::orderBy('id','DESC')->get();
+        // if( !Auth::check()) {
+        //     return response()->json([
+        //         "error" => "User No Found"
+        //     ]);
+        // }
 
-        $response = [
-            'message'=>'List data magang order by id',
-            'data' => $internship
-        ];
-
-        return response()->json($response,Response::HTTP_OK);
+        $internships = Internship::orderBy('id', 'DESC')
+            ->with(['user', 'location', 'tag'])
+            ->get();
+        return response()->json($internships, Response::HTTP_OK);
     }
 
     /**
@@ -44,40 +54,77 @@ class InternshipController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, $userId)
     {
-        $validator = Validator::make($request->all(),[
-            'namaProgram' =>['required'],
-            'status' =>['required','in:buka,tutup'],
-            'deskripsi' =>['required'],
-            'tag' =>['required'],
-            'durasi' =>['required','numeric'],
-            'benefit' =>['required'],
-            'requirement' =>['required'],
-            'linkRegistrasi' =>['required'],
-            'closeRegistrasi' =>['required'],
+
+        // $this->authorize('create', Internship::class);
+
+        $user = User::findOrFail($userId);
+
+
+
+        $validator = Validator::make($request->all(), [
+            'programName' => ['required'],
+            'isOpen' => ['required'],
+            'description' => ['required'],
+            'duration' => ['required', 'numeric'],
+            'benefit' => ['required'],
+            'requirement' => ['required'],
+            'registrationLink' => ['required'],
+            'closeRegistration' => ['required'],
+            'locationName' => ['required'],
+            'tagName' => ['required'],
+            'imageUrl' => ['required'],
+            'isPaid' => ['required'],
+            'isWfh' => ['required'],
         ]);
 
-        if($validator->fails()){
-            return response()->json($validator->errors(),Response::HTTP_UNPROCESSABLE_ENTITY);
-
+        if ($validator->fails()) {
+            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
         try {
-            $internship = internship::create($request->all());
-            $response =[
+
+            $internship = new Internship;
+            $internship->programName = $request->programName;
+            $internship->isOpen = $request->isOpen;
+            $internship->description = $request->description;
+            $internship->duration = $request->duration;
+            $internship->requirement = $request->requirement;
+            $internship->benefit = $request->benefit;
+            $internship->registrationLink = $request->registrationLink;
+            $internship->closeRegistration = $request->closeRegistration;
+            $internship->user_id = $user->id;
+            $internship->imageUrl = $request->imageUrl;
+            $internship->isWfh = $request->isWfh;
+            $internship->isPaid = $request->isPaid;
+
+            $location = Location::firstOrCreate([
+                'locationName' => $request->locationName
+            ]);
+            $internship->location_id = $location->id;
+
+
+            $tag = Tag::firstOrCreate([
+                'tagName' => $request->tagName
+            ]);
+            $internship->tag_id = $tag->id;
+
+
+            $internship->save();
+            $internship->with(['user', 'location', 'tag']);
+
+            $response = [
                 'message' => 'Internship created',
                 'data' => $internship
             ];
 
-            return response()->json($response,Response::HTTP_CREATED);
-
+            return response()->json($response, Response::HTTP_CREATED);
         } catch (QueryException $e) {
             return response()->json([
                 'message' => $e->errorInfo
             ]);
         }
-
     }
 
     /**
@@ -86,17 +133,23 @@ class InternshipController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show($internship_id)
     {
         //
-        $internship = internship::findOrFail($id);
 
-        $response = [
-            'message'=>'List data magang order by id',
-            'data' => $internship
-        ];
 
-        return response()->json($response,Response::HTTP_OK);
+        // $this->authorize('view', Internship::class);
+
+        $intern = Internship::findOrFail($internship_id);
+
+
+
+        $intern->with(['user', 'location', 'tag'])->get();
+
+
+
+
+        return response()->json($intern, Response::HTTP_OK);
     }
 
     /**
@@ -117,41 +170,38 @@ class InternshipController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, $internship_id)
     {
-        $internship = internship::findOrFail($id);
 
-        $validator = Validator::make($request->all(),[
-            'namaProgram' =>['required'],
-            'status' =>['required','in:buka,tutup'],
-            'deskripsi' =>['required'],
-            'tag' =>['required'],
-            'durasi' =>['required','numeric'],
-            'benefit' =>['required'],
-            'requirement' =>['required'],
-            'linkRegistrasi' =>['required'],
-            'closeRegistrasi' =>['required'],
+        $internship = Internship::findOrFail($internship_id);
+        $internship->update($request->all());
+
+
+        $location = Location::firstOrCreate([
+            'locationName' => $request->locationName
         ]);
+        $internship->location_id = $location->id;
 
-        if($validator->fails()){
-            return response()->json($validator->errors(),Response::HTTP_UNPROCESSABLE_ENTITY);
 
-        }
+        $tag = Tag::firstOrCreate([
+            'tagName' => $request->tagName
+        ]);
+        $internship->tag_id = $tag->id;
 
-        try {
-            $internship ->update($request->all());
-            $response =[
-                'message' => 'Internship updated',
-                'data' => $internship
-            ];
 
-            return response()->json($response,Response::HTTP_OK);
+        $internship->save();
 
-        } catch (QueryException $e) {
-            return response()->json([
-                'message' => $e->errorInfo
-            ]);
-        }
+        $response = [
+            'message' => 'Internship edited',
+            'data' => $internship
+        ];
+
+        return response()->json($response, Response::HTTP_OK);
+        // } catch (QueryException $e) {
+        //     return response()->json([
+        //         'message' => $e->errorInfo
+        //     ]);
+        // }
     }
 
     /**
@@ -160,25 +210,23 @@ class InternshipController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy($internship_id)
     {
         //
-        $internship = internship::findOrFail($id);
-        
+        $internship = Internship::findOrFail($internship_id);
+
         try {
-            $internship ->delete();
-            $response =[
+            $internship->delete();
+            $response = [
                 'message' => 'Internship deleted',
-                
+
             ];
 
-            return response()->json($response,Response::HTTP_OK);
-
+            return response()->json($response, Response::HTTP_OK);
         } catch (QueryException $e) {
             return response()->json([
                 'message' => $e->errorInfo
             ]);
         }
-
     }
 }
