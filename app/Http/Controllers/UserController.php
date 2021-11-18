@@ -8,7 +8,11 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\ResponseFormatter;
 use Response;
+<<<<<<< HEAD
 use Illuminate\Support\Facades\Auth;
+=======
+use Auth;
+>>>>>>> login-register
 use Exception;
 
 class UserController extends Controller
@@ -24,7 +28,10 @@ class UserController extends Controller
                 'isVerified'        => ['nullable'],
                 'address'           => ['nullable'],
                 'phoneNumber'       => ['nullable'],
+<<<<<<< HEAD
                 'imageUrl'          => ['nullable'],
+=======
+>>>>>>> login-register
                 'description'       => ['nullable'],
                 'email_verified_at' => ['date'],
             ]);
@@ -36,7 +43,10 @@ class UserController extends Controller
                 'isAdmin' => $request->isAdmin,
                 'isVerified' => $request->isVerified,
                 'address' => $request->address,
+<<<<<<< HEAD
                 'imageUrl' => $request->imageUrl,
+=======
+>>>>>>> login-register
                 'phoneNumber' => $request->phoneNumber,
                 'description' => $request->description,
                 'email_verified_at' => $request->email_verified_at
