@@ -3,25 +3,39 @@
 namespace App\Http\Controllers;
 
 use App\Models\Internship;
+use App\Models\Location;
+use App\Models\Tag;
 use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\Gate;
 use Symfony\Component\HttpFoundation\Response;
 
 class InternshipController extends Controller
 {
+    // public function __construct()
+    // {
+    //     $this->authorizeResource(Internship::class,'internship');
+    // }
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //a
+        // if( !Auth::check()) {
+        //     return response()->json([
+        //         "error" => "User No Found"
+        //     ]);
+        // }
+
         $internships = Internship::orderBy('id', 'DESC')
-            ->with(['user', 'location','tag'])
+            ->with(['user', 'location', 'tag'])
             ->get();
+
 
         return response()->json($internships, Response::HTTP_OK);
     }
@@ -32,6 +46,7 @@ class InternshipController extends Controller
             ->orderBy('id', 'DESC')
             ->with(['user', 'location','tag'])
             ->get();
+
 
         return response()->json($internships, Response::HTTP_OK);
     }
@@ -52,9 +67,13 @@ class InternshipController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store( Request $request,$userId)
+    public function store(Request $request, $userId)
     {
+
+        // $this->authorize('create', Internship::class);
+
         $user = User::findOrFail($userId);
+
 
 
         $validator = Validator::make($request->all(), [
@@ -78,6 +97,7 @@ class InternshipController extends Controller
         }
 
         try {
+
             $internship = new Internship;
             $internship->programName = $request->programName;
             $internship->isOpen = $request->isOpen;
@@ -92,15 +112,20 @@ class InternshipController extends Controller
             $internship->isWfh = $request->isWfh;
             $internship->isPaid = $request->isPaid;
 
+            $location = Location::firstOrCreate([
+                'locationName' => $request->locationName
+            ]);
+            $internship->location_id = $location->id;
 
-            $locationController = new locationController;
-            $locationId = $locationController->getLocation($request->locationName);
-            $internship->location_id = $locationId;
 
-            $tagController = new tagController;
-            $tagId = $tagController->getTag($request->tagName);
-            $internship->tag_id = $tagId;
+            $tag = Tag::firstOrCreate([
+                'tagName' => $request->tagName
+            ]);
+            $internship->tag_id = $tag->id;
+
+
             $internship->save();
+            $internship->with(['user', 'location', 'tag']);
 
             $response = [
                 'message' => 'Internship created',
@@ -121,37 +146,24 @@ class InternshipController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($internshipId)
+    public function show($internship_id)
     {
-        //
-
-        $intern = Internship::findOrFail($internshipId);
-
-
-        $response = [
-            'message' => 'List data magang order by id',
-            'programName' => $intern->programName,
-            'description' => $intern->description,
-            'benefit' => $intern->benefit,
-            'requirement' => $intern->requirement,
-            'registrationLink' => $intern->registrationLink,
-            'isOpen' => $intern->isOpen,
-            'duration' => $intern->duration,
-            'imageUrl' => $intern->imageUrl,
-            'location' => $intern->location->locationName,
-            'user' => $intern->user->name,
-            'email' => $intern->user->email,
-            'phoneNumber' => $intern->user->phoneNumber,
-            'isPaid' => $intern->isPaid,
-            'isPaid' => $intern->isWfh,
+       
 
 
 
-            // 'location' => $intern->location,
-            // 'image' => $intern->image,
-        ];
+        // $this->authorize('view', Internship::class);
 
-        return response()->json($response, Response::HTTP_OK);
+        $intern = Internship::findOrFail($internship_id);
+
+
+
+        $intern->with(['user', 'location', 'tag'])->get();
+
+
+
+
+        return response()->json($intern, Response::HTTP_OK);
     }
 
     /**
@@ -172,67 +184,39 @@ class InternshipController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $internshipId)
+    public function update(Request $request, $internship_id)
     {
 
-        $internship = Internship::findOrFail($internshipId);
+
+        $internship = Internship::findOrFail($internship_id);
+        $internship->update($request->all());
 
 
-        $validator = Validator::make($request->all(), [
-            'programName' => ['required'],
-            'isOpen' => ['required'],
-            'description' => ['required'],
-            'duration' => ['required', 'numeric'],
-            'benefit' => ['required'],
-            'requirement' => ['required'],
-            'registrationLink' => ['required'],
-            'closeRegistration' => ['required'],
-            'locationName' => ['required'],
-            'tagName' => ['required'],
-            'imageUrl' => ['required'],
-            'isPaid' => ['required'],
-            'isWfh' => ['required'],
+        $location = Location::firstOrCreate([
+            'locationName' => $request->locationName
         ]);
+        $internship->location_id = $location->id;
 
-        if ($validator->fails()) {
-            return response()->json($validator->errors(), Response::HTTP_UNPROCESSABLE_ENTITY);
-        }
 
-        try {
+        $tag = Tag::firstOrCreate([
+            'tagName' => $request->tagName
+        ]);
+        $internship->tag_id = $tag->id;
 
-            $internship->programName = $request->programName;
-            $internship->isOpen = $request->isOpen;
-            $internship->description = $request->description;
-            $internship->duration = $request->duration;
-            $internship->requirement = $request->requirement;
-            $internship->benefit = $request->benefit;
-            $internship->registrationLink = $request->registrationLink;
-            $internship->closeRegistration = $request->closeRegistration;
-            $internship->user_id = $internship->id;
-            $internship->imageUrl = $request->imageUrl;
-            $internship->isWfh = $request->isWfh;
-            $internship->isPaid = $request->isPaid;
 
-            $locationController = new locationController;
-            $locationId = $locationController->getLocation($request->locationName);
-            $internship->location_id = $locationId;
+        $internship->save();
 
-            $tagController = new tagController;
-            $tagId = $tagController->getTag($request->tagName);
-            $internship->tag_id = $tagId;
-            $internship->save();
+        $response = [
+            'message' => 'Internship edited',
+            'data' => $internship
+        ];
 
-            $response = [
-                'message' => 'Internship edited',
-                'data' => $internship
-            ];
-
-            return response()->json($response, Response::HTTP_OK);
-        } catch (QueryException $e) {
-            return response()->json([
-                'message' => $e->errorInfo
-            ]);
-        }
+        return response()->json($response, Response::HTTP_OK);
+        // } catch (QueryException $e) {
+        //     return response()->json([
+        //         'message' => $e->errorInfo
+        //     ]);
+        // }
     }
 
     /**
@@ -241,10 +225,10 @@ class InternshipController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($internshipId)
+    public function destroy($internship_id)
     {
         //
-        $internship = Internship::findOrFail($internshipId);
+        $internship = Internship::findOrFail($internship_id);
 
         try {
             $internship->delete();
