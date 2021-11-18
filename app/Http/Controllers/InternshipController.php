@@ -35,6 +35,19 @@ class InternshipController extends Controller
         $internships = Internship::orderBy('id', 'DESC')
             ->with(['user', 'location', 'tag'])
             ->get();
+
+
+        return response()->json($internships, Response::HTTP_OK);
+    }
+    public function listById($userId)
+    {
+
+        $internships = Internship::where('user_id',$userId)
+            ->orderBy('id', 'DESC')
+            ->with(['user', 'location','tag'])
+            ->get();
+
+
         return response()->json($internships, Response::HTTP_OK);
     }
 
@@ -135,7 +148,8 @@ class InternshipController extends Controller
      */
     public function show($internship_id)
     {
-        //
+       
+
 
 
         // $this->authorize('view', Internship::class);
@@ -172,6 +186,7 @@ class InternshipController extends Controller
      */
     public function update(Request $request, $internship_id)
     {
+
 
         $internship = Internship::findOrFail($internship_id);
         $internship->update($request->all());
