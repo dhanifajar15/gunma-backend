@@ -22,23 +22,17 @@ class InternshipController extends Controller
         $internships = Internship::orderBy('id', 'DESC')
             ->with(['user', 'location','tag'])
             ->get();
-        // foreach ($internships as $intern) {
-        //     $response = [
-        //         'message' => 'List data magang order by id',
-        //         'programName' => $intern->programName,
-        //         'description' => $intern->description,
-        //         'benefit' => $intern->benefit,
-        //         'requirement' => $intern->requirement,
-        //         'registrationLink' => $intern->registrationLink,
-        //         'isOpen' => $intern->isOpen,
-        //         'duration' => $intern->duration,
-        //         'image' => $intern->image->filePath,
-        //         'location' => $intern->location->locationName,
 
-        //     ];
+        return response()->json($internships, Response::HTTP_OK);
+    }
+    public function listById($userId)
+    {
 
-            
-        // }
+        $internships = Internship::where('user_id',$userId)
+            ->orderBy('id', 'DESC')
+            ->with(['user', 'location','tag'])
+            ->get();
+
         return response()->json($internships, Response::HTTP_OK);
     }
 
@@ -130,7 +124,7 @@ class InternshipController extends Controller
     public function show($internshipId)
     {
         //
-        
+
         $intern = Internship::findOrFail($internshipId);
 
 
@@ -180,7 +174,7 @@ class InternshipController extends Controller
      */
     public function update(Request $request, $internshipId)
     {
-        
+
         $internship = Internship::findOrFail($internshipId);
 
 

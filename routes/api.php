@@ -23,6 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 Route::get('/v1/internship',[InternshipController::class,'index']);
 Route::post('/v1/internship/{userId}',[InternshipController::class,'store']);
+Route::get('/v1/myInternship/{userId}',[InternshipController::class,'listById']);
 Route::put('/v1/internship/{internshipId}',[InternshipController::class,'update']);
 Route::get('/v1/internship/{internshipId}',[InternshipController::class,'show']);
 Route::delete('/v1/internship/{internshipId}',[InternshipController::class,'destroy']);
