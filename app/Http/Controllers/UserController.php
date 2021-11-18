@@ -8,11 +8,7 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use App\Helpers\ResponseFormatter;
 use Response;
-<<<<<<< HEAD
 use Illuminate\Support\Facades\Auth;
-=======
-use Auth;
->>>>>>> login-register
 use Exception;
 
 class UserController extends Controller
@@ -28,10 +24,7 @@ class UserController extends Controller
                 'isVerified'        => ['nullable'],
                 'address'           => ['nullable'],
                 'phoneNumber'       => ['nullable'],
-<<<<<<< HEAD
                 'imageUrl'          => ['nullable'],
-=======
->>>>>>> login-register
                 'description'       => ['nullable'],
                 'email_verified_at' => ['date'],
             ]);
@@ -43,10 +36,7 @@ class UserController extends Controller
                 'isAdmin' => $request->isAdmin,
                 'isVerified' => $request->isVerified,
                 'address' => $request->address,
-<<<<<<< HEAD
                 'imageUrl' => $request->imageUrl,
-=======
->>>>>>> login-register
                 'phoneNumber' => $request->phoneNumber,
                 'description' => $request->description,
                 'email_verified_at' => $request->email_verified_at
@@ -66,11 +56,11 @@ class UserController extends Controller
             return ResponseFormatter::error([
                 'message' => 'Something Went Wrong',
                 'error' => $error
-            ], 'Authentication failed');    
+            ], 'Authentication failed');
         }
     }
 
-    public function login(Request $request) 
+    public function login(Request $request)
     {
         try {
             $request->validate([
@@ -83,17 +73,17 @@ class UserController extends Controller
             if (!Auth::attempt($credentials)) {
                 return ResponseFormatter::error([
                     'message' => 'Unauthorized'
-                ], 'Authentication Failed');    
-            }         
-                
-            $user = User::where('email', $request->email)->first(); 
-            
+                ], 'Authentication Failed');
+            }
+
+            $user = User::where('email', $request->email)->first();
+
             if (!Hash::check($request->password, $user->password, [])) {
                 throw new \Exception('Invalid Credentials');
             }
 
             $tokenResult = $user->createToken('authToken')->plainTextToken;
-            
+
             return ResponseFormatter::success([
                 'access_token' => $tokenResult,
                 'token_type' => 'Bearer',
@@ -134,7 +124,7 @@ class UserController extends Controller
     {
         $data = $request -> user();
         $user = Auth::user();
-        
+
         return ResponseFormatter::success($user, 'Detail Profile');
     }
 
