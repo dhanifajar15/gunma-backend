@@ -2,6 +2,9 @@
 
 namespace App\Providers;
 
+use App\Models\Internship;
+use App\Models\User;
+use App\Policies\InternshipPolicy;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Gate;
 
@@ -12,8 +15,12 @@ class AuthServiceProvider extends ServiceProvider
      *
      * @var array
      */
+
+
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
+        // 'App\Models\Internship' => 'App\Policies\InternshipPolicy',
+        Internship::class => InternshipPolicy::class,
     ];
 
     /**
@@ -26,5 +33,8 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
         //
+        // Gate::define('show-intern',function(User $user ,Internship $internship){
+        //     return true;
+        // });
     }
 }

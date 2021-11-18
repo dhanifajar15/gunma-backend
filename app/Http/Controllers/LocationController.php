@@ -17,20 +17,9 @@ class LocationController extends Controller
         $location = Location::findOrFail($id);
 
     }
-    public function getLocation ($name){
-        // $location = Location::all()->firstWhere('locationName',$name);
-        $location = Location::where('locationName',$name)->get();
-        if ( empty($location)){
-            return $location->id;
-        }
-        else {
-            $locationNew = new Location;
-            $locationNew->locationName = $name;
-            $locationNew->save();
-            return $locationNew->id;
-        }
-        
 
-    }
+
+
+
 
 }
