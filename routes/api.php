@@ -40,7 +40,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('update-profile', [UserController::class, 'updateProfile']);
     Route::post('logout', [UserController::class, 'logout']);
     Route::post('delete', [UserController::class, 'delete']);
-    Route::post('detail-profile', [UserController::class, 'detailProfile']);
+    Route::get('detail-profile', [UserController::class, 'detailProfile']);
 
 
 });
