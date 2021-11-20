@@ -1,6 +1,7 @@
 version: "3"
 services: 
-    web_server:
+    webserver:
+        container_name : gunma_webserver
         build: docker/images/nginx
         command: nginx -g "daemon off;"
         links:
@@ -15,10 +16,13 @@ services:
             - gunma-net
             
     php:
-        build: docker/images/php
-        volumes: 
-            - ./:/var/www/html/app
-        working_dir: /var/www/html/app
+        container_name : gunma_php
+        build: 
+            context: ./
+            dockerfile: ./docker/images/php/Dockerfile
+        # volumes: 
+        #     - ./:/var/www/html/app
+        # working_dir: /var/www/html/app
         links:
             - mysql
         ports: 
@@ -38,6 +42,7 @@ services:
             - gunma-net
 
     mysql:
+        container_name : gunma_mysql
         image: mysql:8.0
         ports:
             - "3306:3306"
@@ -50,6 +55,7 @@ services:
             - gunma-net
 
     phpmyadmin:
+        container_name : gunma_phpmyadmin
         image: phpmyadmin:latest
         ports:
             - 8080:80
@@ -58,7 +64,7 @@ services:
         environment:
             PMA_HOST: mysql
             PMA_PASSWORD: ${DB_PASSWORD}
-        restart: unless-stopped
+        # restart: unless-stopped
         networks:
             - gunma-net
 
