@@ -244,4 +244,15 @@ class InternshipController extends Controller
             ]);
         }
     }
+
+     /**
+
+     * @param  int  $name
+     * @return \Illuminate\Http\Response
+     */
+    public function search($name)
+    {
+        //
+        return Internship::where('programName','like','%'.$name.'%')->get();
+    }
 }
