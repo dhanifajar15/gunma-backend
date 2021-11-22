@@ -9,12 +9,16 @@ use Illuminate\Http\Request;
 class LocationController extends Controller
 {
     public function index (){
-        $location = Location::orderBy('id','DESC')->get();
+        return Location::orderBy('id','DESC')->get();
 
     }
 
     public function show ($id){
-        $location = Location::findOrFail($id);
+        return  Location::findOrFail($id);
+
+    }
+    public function search ($name){
+        return Location::where('locationName','like','%'.$name.'%')->get();
 
     }
 

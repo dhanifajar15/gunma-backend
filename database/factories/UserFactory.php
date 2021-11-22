@@ -23,7 +23,7 @@ class UserFactory extends Factory
     {
         return [
             'name' => $this->faker->name(),
-          
+
             'isAdmin' => rand(0,1),
             'isVerified' => rand(0,1),
             'email' => $this->faker->unique()->safeEmail(),

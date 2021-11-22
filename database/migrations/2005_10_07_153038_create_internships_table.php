@@ -14,21 +14,24 @@ class CreateInternshipsTable extends Migration
     public function up()
     {
         Schema::create('internships', function (Blueprint $table) {
-            $table->id();          
-            $table->foreignId('location_id')->constrained('locations');
-            $table->foreignId('user_id')->constrained('users');
-            $table->foreignId('tag_id')->constrained('tags');
+            $table->id();
+            $table->foreignId('location_id')->constrained('locations')
+            ->onDelete('cascade');
+            $table->foreignId('user_id')->constrained('users')
+            ->onDelete('cascade');
+            $table->foreignId('tag_id')->constrained('tags')
+            ->onDelete('cascade');
             $table->string('programName');
-            $table->string('isPaid');
-            $table->string('isWfh');
+            $table->string('isPaid')->nullable()->default('false');
+            $table->string('isWfh')->nullable()->default('false');
             $table->string('imageUrl')->nullable();
-            $table->string('description');
-            $table->string('benefit');
-            $table->string('requirement');
-            $table->string('registrationLink');
-            $table->boolean('isOpen');
-            $table->integer('duration');
-            $table->timestamp('closeRegistration');
+            $table->string('description')->nullable();
+            $table->string('benefit')->nullable();
+            $table->string('requirement')->nullable();
+            $table->string('registrationLink')->nullable();
+            $table->string('isOpen')->nullable()->default('true');
+            $table->integer('duration')->nullable();
+            $table->timestamp('closeRegistration')->nullable();
             $table->timestamps();
         });
     }
